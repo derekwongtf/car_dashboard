@@ -225,13 +225,15 @@ if add_sidebar == 'Individual Car Brand Analysis':
     
     agg_filtered = df_agg[df_agg['Car Brand'] == brand_select]
     
+    
     bar = alt.Chart(agg_filtered).mark_bar().encode(
-    x=alt.X('count(Exterior Color)', stack="normalize"),
-    y='Car Brand',
+    x=alt.X('count(Exterior Color)'),
+    y='Manufacture Year',
     color=alt.Color("Exterior Color:N"),
-    tooltip=alt.Tooltip("count(Exterior Color)", format=",.0f")
+    # tooltip=alt.Tooltip("count(Exterior Color)", format=",.0f")
     ).properties(    
         width=v_width,
         height=v_height
        )
     bar
+    
