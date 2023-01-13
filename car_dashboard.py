@@ -45,7 +45,8 @@ source_top10 = df_agg['Car Brand'].value_counts().rename_axis('Car Brand').reset
 ###############################################################################
 #Start building Streamlit App
 ###############################################################################
-
+v_width=500
+v_height=380
 
 add_sidebar = st.sidebar.selectbox('Analysis Selection', ('Aggregate Metrics','Aggregate Graphic','Individual Car Brand Analysis'))
 
@@ -96,8 +97,7 @@ if add_sidebar == 'Aggregate Metrics':
     
    # st.altair_chart(base, use_container_width=True)
 if add_sidebar == 'Aggregate Graphic':
-    v_width=500
-    v_height=380
+
     source2 = df_agg['Transaction Date'].value_counts().rename_axis('Transaction Date').reset_index(name='Counts')
 
     base = alt.Chart(source2,title="Number Of Transactions Per Month").mark_area(
@@ -221,6 +221,17 @@ if add_sidebar == 'Individual Car Brand Analysis':
     
     brands = tuple(source_top10['Car Brand'][0:10])
     st.write("Individual Car Brand")
-    brand_select = st.selectbox('Pick a Video:', brands)
+    brand_select = st.selectbox('Pick a Brand:', brands)
     
-    # df_scatter=df_agg[df_agg['Car Brand'].isin(top10_car_brands)]
+    agg_filtered = df_agg[df_agg['Car Brand'] == brand_select]
+    
+    bar = alt.Chart(agg_filtered).mark_bar().encode(
+    x=alt.X('count(Exterior Color)', stack="normalize"),
+    y='Car Brand',
+    color=alt.Color("Exterior Color:N"),
+    tooltip=alt.Tooltip("count(Exterior Color)", format=",.0f")
+    ).properties(    
+        width=v_width,
+        height=v_height
+       )
+    bar
